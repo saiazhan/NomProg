@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">NomProg</string>
+    <string name="accessibility_description">Блокировка сайтов Chrome</string>
+</resources>
