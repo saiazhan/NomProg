@@ -39,8 +39,15 @@ public class MainActivity extends Activity {
 
         blockSwitch.setOnCheckedChangeListener((button, checked) -> {
             SiteStorage.setEnabled(this, checked);
+        
             if (checked) {
-                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                startNomProgService();
+        
+                startActivity(new Intent(
+                        Settings.ACTION_ACCESSIBILITY_SETTINGS
+                ));
+            } else {
+                stopNomProgService();
             }
         });
 
@@ -101,6 +108,27 @@ public class MainActivity extends Activity {
         
         batteryButton.setOnClickListener(v ->
                 requestBatteryPermission());
+        if (SiteStorage.isEnabled(this)) {
+            startNomProgService();
+        }
+    }
+    private void startNomProgService() {
+        Intent intent = new Intent(
+                this,
+                NomProgForegroundService.class
+        );
+    
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
+    }
+    private void stopNomProgService() {
+        stopService(new Intent(
+                this,
+                NomProgForegroundService.class
+        ));
     }
     private void requestBatteryPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
