@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.widget.*;
 import java.util.ArrayList;
+import android.net.Uri;
+import android.os.PowerManager;
+import android.os.Build;
 
 public class MainActivity extends Activity {
     LinearLayout root, siteList;
@@ -92,8 +95,32 @@ public class MainActivity extends Activity {
 
         renderSites();
         updateStatistics();
+        Button batteryButton = new Button(this);
+        batteryButton.setText("Разрешить работу 24/7");
+        root.addView(batteryButton);
+        
+        batteryButton.setOnClickListener(v ->
+                requestBatteryPermission());
     }
-
+    private void requestBatteryPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PowerManager pm =
+                    (PowerManager) getSystemService(POWER_SERVICE);
+    
+            if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                Intent intent = new Intent(
+                        Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                        Uri.parse("package:" + getPackageName())
+                );
+    
+                startActivity(intent);
+            } else {
+                Toast.makeText(this,
+                        "Ограничения батареи отключены!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     private void renderSites() {
         siteList.removeAllViews();
         for (String site : SiteStorage.getSites(this)) {
