@@ -141,6 +141,46 @@ public class ShortsBlockAccessibilityService
         }
     }
 
+
+        private static boolean serviceConnected = false;
+        
+        @Override
+        protected void onServiceConnected() {
+            super.onServiceConnected();
+            serviceConnected = true;
+        
+            android.util.Log.i(
+                    "NomProg",
+                    "Accessibility подключена"
+            );
+        }
+        
+        @Override
+        public void onInterrupt() {
+            serviceConnected = false;
+        
+            android.util.Log.w(
+                    "NomProg",
+                    "Accessibility прервана"
+            );
+        }
+        
+        @Override
+        public void onDestroy() {
+            serviceConnected = false;
+        
+            android.util.Log.w(
+                    "NomProg",
+                    "Accessibility уничтожена"
+            );
+        
+            super.onDestroy();
+        }
+
+
+
+
+                
     @Override
     public void onInterrupt() {
     }
