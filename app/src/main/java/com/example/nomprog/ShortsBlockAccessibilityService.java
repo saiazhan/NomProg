@@ -177,11 +177,4 @@ public class ShortsBlockAccessibilityService
             super.onDestroy();
         }
 
-
-
-
-                
-    @Override
-    public void onInterrupt() {
-    }
 }
